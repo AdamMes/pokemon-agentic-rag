@@ -32,3 +32,10 @@ docker run -p 5001:5001 \
 
 # 📊 Data Credit
 The dataset used in this project was sourced from [Kaggle](https://www.kaggle.com/datasets/abcsds/pokemon).
+
+# 📸 Screenshots
+### Faiss route
+![Faiss Route App](data/screenshots/app-screenshot-faiss-route.png)
+
+### Pandas route
+![Pandas Route App](data/screenshots/app-screenshot-home-pandas-route.png)
