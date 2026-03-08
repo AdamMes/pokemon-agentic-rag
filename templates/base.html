@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Agentic RAG</title>
+    <link rel="icon" type="image/xml" href="{{ url_for('static', filename='images/favicon.webp') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div id="page-loader">
+        <img src="{{ url_for('static', filename='images/pokemon-23.svg') }}" alt="Loading..." class="pulse-anim">
+        <h2>Booting Pokémon Pokédex...</h2>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('home') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; gap: 15px;">
+                <img src="{{ url_for('static', filename='images/pokeball.png') }}" alt="Logo">
+                <span>Pokémon AI</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // Remove the page loader after the window fully loads
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            setTimeout(() => {
+                loader.classList.add('fade-out');
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 800); // Brief delay for visual effect
+        });
+    </script>
+</body>
+</html>

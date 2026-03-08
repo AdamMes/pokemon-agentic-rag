@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+
+    <div class="chat-header-image">
+        <img src="{{ url_for('static', filename='images/pikachu-1.png') }}" alt="pikachu-banner">
+    </div>
+
+    <div id="chat-window" class="chat-window">
+        <div class="message bot-message">
+           Welcome to the Pokémon Research Lab! I am your AI Pokédex Assistant. Which Pokémon shall we analyze today?
+        </div>
+    </div>
+
+    <div id="chat-loader" class="chat-loader" style="display: none;">
+        <img src="{{ url_for('static', filename='images/pokeball.png') }}" alt="Loading" class="spin-anim">
+        <span>Searching in Pokédex...</span>
+    </div>
+
+    <form id="chat-form" class="chat-input-area">
+        <input type="text" id="user-input" placeholder="e.g. Which Pokemon has the highest HP?" required autocomplete="off">
+        <button type="submit" id="send-btn">Send</button>
+    </form>
+
+    <div>
+        <h4>Last request details:</h4>
+    </div>
+    <div class="stats-panel">
+        <div class="stat-box">
+            <span class="stat-label">Route Used:</span>
+            <span class="stat-value badge" id="stat-route">-</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label">Tokens:</span>
+            <span class="stat-value" id="stat-tokens">-</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label">API Requests:</span>
+            <span class="stat-value" id="stat-requests">-</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label">Time:</span>
+            <span class="stat-value" id="stat-time">-</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatWindow = document.getElementById('chat-window');
+    const chatLoader = document.getElementById('chat-loader');
+
+    // Stats Elements
+    const statRoute = document.getElementById('stat-route');
+    const statTokens = document.getElementById('stat-tokens');
+    const statRequests = document.getElementById('stat-requests');
+    const statTime = document.getElementById('stat-time');
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const question = userInput.value.trim();
+        if (!question) return;
+
+        // Add User Message
+        addMessage(question, 'user-message');
+
+        // Disable input & show loader
+        userInput.value = '';
+        userInput.disabled = true;
+        sendBtn.disabled = true;
+        chatLoader.style.display = 'flex';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: question })
+            });
+            const data = await response.json();
+
+            // Update Stats Panel
+            statRoute.textContent = data.route_used || 'ERROR';
+            statRoute.className = `stat-value badge ${data.route_used === 'PANDAS' ? 'badge-pandas' : 'badge-faiss'}`;
+            statTokens.textContent = data.tokens || 0;
+            statRequests.textContent = data.api_requests || 0;
+            statTime.textContent = (data.exec_time || 0) + 's';
+
+            // Add Bot Message WITH Sources
+            if (data.error) {
+                addMessage('Error: ' + data.error, 'bot-message error-text');
+            } else {
+                addBotMessageWithSources(data.answer, data.context);
+            }
+        } catch (error) {
+            addMessage('Server connection failed.', 'bot-message error-text');
+        } finally {
+            // Hide loader & re-enable input
+            chatLoader.style.display = 'none';
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+    });
+
+    function addMessage(text, className) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${className}`;
+        msgDiv.textContent = text;
+        chatWindow.appendChild(msgDiv);
+    }
+
+    function addBotMessageWithSources(text, sources) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message bot-message';
+
+        // Main answer text
+        const textSpan = document.createElement('div');
+        textSpan.innerHTML = text.replace(/\n/g, '<br>'); // Handle line breaks
+        msgDiv.appendChild(textSpan);
+
+        // If we have sources, create a collapsible section
+        if (sources && sources.length > 0) {
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'source-toggle-btn';
+            toggleBtn.innerHTML = '🔍 View Retrieved Context';
+
+            const sourcesDiv = document.createElement('div');
+            sourcesDiv.className = 'sources-container';
+            sourcesDiv.style.display = 'none';
+
+            sources.forEach((src, index) => {
+                const p = document.createElement('p');
+                p.textContent = `[${index + 1}] ${src}`;
+                sourcesDiv.appendChild(p);
+            });
+
+            toggleBtn.onclick = () => {
+                if (sourcesDiv.style.display === 'none') {
+                    sourcesDiv.style.display = 'block';
+                    toggleBtn.innerHTML = '🙈 Hide Context';
+                } else {
+                    sourcesDiv.style.display = 'none';
+                    toggleBtn.innerHTML = '🔍 View Retrieved Context';
+                }
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            };
+
+            msgDiv.appendChild(toggleBtn);
+            msgDiv.appendChild(sourcesDiv);
+        }
+
+        chatWindow.appendChild(msgDiv);
+    }
+</script>
+{% endblock %}

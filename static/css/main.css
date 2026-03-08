@@ -1,0 +1,521 @@
+:root {
+    --poke-red: #ee1515;
+    --poke-yellow: #f0c000;
+    --poke-blue: #222224;
+    --bg-light: #f4f7f6;
+    --text-dark: #333333;
+    --white: #ffffff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Page Loader --- */
+#page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+#page-loader img {
+    width: 50vw;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#page-loader h2 {
+    color: var(--poke-red);
+    letter-spacing: 2px;
+}
+
+.pulse-anim {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+/* --- Navbar --- */
+.navbar {
+    background-color: var(--poke-red);
+    color: var(--white);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.nav-brand img {
+    width: 40px;
+    height: 40px;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 600;
+    font-size: 25px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--poke-yellow);
+}
+
+/* --- Home Page Specific Background --- */
+body.home-page {
+    /* The '../' tells CSS to go up one folder from 'css', then into 'images' */
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Make the chat container slightly transparent ONLY on the home page */
+body.home-page .chat-container {
+    background: rgba(255, 255, 255, 1);
+}
+
+/* --- Main Container --- */
+.container {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- Chat Container --- */
+.chat-container {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+}
+
+/* --- Chat Window & Messages --- */
+.chat-window {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+    margin-bottom: 15px;
+}
+
+.message {
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+}
+
+/* User Question - Right Align */
+.user-message {
+    align-self: flex-end;
+    background-color: var(--poke-blue);
+    color: var(--white);
+    border-bottom-right-radius: 4px;
+}
+
+/* Bot Answer - Left Align */
+.bot-message {
+    align-self: flex-start;
+    background-color: #e0e0e0;
+    color: var(--text-dark);
+    border-bottom-left-radius: 4px;
+}
+
+.error-text {
+    color: var(--poke-red);
+    font-weight: bold;
+}
+
+/* --- Loader Inside Chat --- */
+.chat-header-image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.chat-header-image img{
+    width: 200px;
+}
+
+.chat-loader {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.chat-loader img {
+    width: 24px;
+    height: 24px;
+}
+
+.spin-anim {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Input Area --- */
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.chat-input-area input:focus {
+    border-color: var(--poke-blue);
+}
+
+.chat-input-area input:disabled {
+    background-color: #f5f5f5;
+}
+
+.chat-input-area button {
+    background-color: var(--poke-yellow);
+    color: var(--text-dark);
+    font-weight: bold;
+    border: none;
+    padding: 0 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.chat-input-area button:hover:not(:disabled) {
+    background-color: #e6b800;
+    transform: scale(1.02);
+}
+
+.chat-input-area button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- Stats Panel (Bottom) --- */
+.stats-panel {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.stat-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-label {
+    color: #666;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: var(--poke-blue);
+}
+
+/* Routing Badges */
+.badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: var(--white);
+    font-size: 0.8rem;
+}
+
+.badge-pandas {
+    background-color: var(--poke-red); /* Red for Pandas/Math */
+}
+
+.badge-faiss {
+    background-color: var(--poke-blue); /* Blue for Semantic/FAISS */
+}
+
+/* --- Sources Reveal Button & Container --- */
+.source-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--poke-blue);
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.source-toggle-btn:hover {
+    color: var(--poke-red);
+}
+
+.sources-container {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-left: 3px solid var(--poke-yellow);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #555;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.sources-container p {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+/* --- About Page Styles --- */
+.about-container {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+}
+
+.about-header h1 {
+    color: var(--poke-red);
+    font-size: 1.8rem;
+}
+
+.about-section {
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.about-section h2 {
+    color: var(--poke-blue);
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.tech-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tech-list li {
+    margin-bottom: 10px;
+}
+
+.tech-badge {
+    background-color: var(--poke-yellow);
+    color: var(--text-dark);
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.challenge-box, .solution-box {
+    background-color: #f9f9f9;
+    border-left: 4px solid var(--poke-red);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 0 8px 8px 0;
+}
+
+.solution-box {
+    border-left-color: #4CAF50; /* Green for solution */
+    background-color: #f1f8e9;
+}
+
+.challenge-box h3, .solution-box h3 {
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.kaggle-btn {
+    display: inline-block;
+    background-color: #20BEFF; /* Kaggle Blue */
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.kaggle-btn:hover {
+    background-color: #1a9cd2;
+    transform: scale(1.05);
+}
+
+/* =========================================
+   Mobile Responsiveness (Media Queries)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+    /* 1. General Spacing */
+    .container {
+        padding: 10px;
+    }
+
+    /* 2. Navbar Adjustment */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .nav-links {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .nav-links a {
+        margin: 0; /* Override previous margin */
+    }
+
+    /* 3. Chat Window Adjustments */
+    .chat-container {
+        height: 85vh; /* Give more height to chat on mobile */
+        padding: 10px;
+    }
+
+    .message {
+        max-width: 90%; /* Messages need more width on small screens */
+        font-size: 0.9rem;
+    }
+
+    /* 4. Chat Input Area */
+    .chat-input-area input {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    .chat-input-area button {
+        padding: 0 15px;
+        font-size: 0.9rem;
+    }
+
+    /* 5. Stats Panel (Convert from row to 2x2 Grid) */
+    .stats-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 columns */
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .stat-box {
+        justify-content: flex-start;
+        font-size: 0.8rem;
+    }
+
+    /* 6. About Page Adjustments */
+    .about-container {
+        padding: 15px;
+    }
+
+    .about-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .challenge-box, .solution-box {
+        border-left: none;
+        border-top: 4px solid var(--poke-red);
+        border-radius: 8px;
+    }
+
+    .solution-box {
+        border-top-color: #4CAF50;
+    }
+}
+
+/* Specific fix for very small screens (like old iPhones) */
+@media screen and (max-width: 400px) {
+    .stats-panel {
+        grid-template-columns: 1fr; /* 1 column layout */
+    }
+}

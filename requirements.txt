@@ -1,0 +1,7 @@
+flask
+pandas
+faiss-cpu
+numpy
+sentence-transformers
+google-genai
+torch==2.5.1

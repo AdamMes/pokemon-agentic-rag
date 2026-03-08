@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-container">
+    <div class="about-header">
+        <h1>About the Pokémon Agentic RAG</h1>
+    </div>
+
+    <section class="about-section">
+        <h2>1. Project Overview</h2>
+        <p>
+            This project is an advanced Retrieval-Augmented Generation (RAG) web application built to explore and query Pokemon statistics.
+            Instead of relying on a single retrieval method, it uses an <strong>Agentic Routing Architecture</strong> to ensure high accuracy for both semantic questions and complex mathematical queries.
+        </p>
+    </section>
+
+    <section class="about-section">
+        <h2>2. Technologies Used</h2>
+        <ul class="tech-list">
+            <li><span class="tech-badge">Python & Flask</span> - Backend architecture and web server.</li>
+            <li><span class="tech-badge">FAISS</span> - Vector database for fast semantic similarity search.</li>
+            <li><span class="tech-badge">SentenceTransformers</span> - Converting textual data into vector embeddings.</li>
+            <li><span class="tech-badge">Pandas</span> - Data manipulation and executing mathematical queries.</li>
+            <li><span class="tech-badge">Google Gemini 2.5 Flash</span> - The core LLM used for routing, and generating final human-readable answers.</li>
+        </ul>
+    </section>
+
+    <section class="about-section">
+        <h2>3. Chunking Strategy & Embeddings</h2>
+        <div class="solution-box">
+            <h3>Row-Based Tabular Chunking</h3>
+            <p>
+                Unlike standard text documents that require tools like NLTK to split paragraphs, this dataset is tabular.
+                Using standard text splitters would break the relationship between a Pokemon and its stats.
+                Therefore, I implemented a <strong>Row-Based Chunking Strategy</strong>. Each row in the CSV was converted into a single textual string (e.g., <em>"Name: Pikachu | Type: Electric | HP: 35..."</em>).
+            </p>
+            <p style="margin-top: 10px;">
+                For the embeddings, I utilized <strong>all-MiniLM-L6-v2</strong> from SentenceTransformers. It was chosen because it is highly efficient and performs exceptionally well on semantic search tasks for structured short texts.
+            </p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>4. Challenges Encountered & Solutions</h2>
+        <div class="challenge-box">
+            <h3>The Challenge: Vector Search Limitations</h3>
+            <p>
+                A standard RAG pipeline using FAISS is excellent at finding semantic similarities.
+                However, it struggles significantly with analytical queries like <em>"Which Pokemon has the highest HP?"</em> or <em>"How many Generation 2 Pokemon exist?"</em> because vector similarity does not understand numerical aggregation.
+            </p>
+        </div>
+        <div class="solution-box">
+            <h3>The Solution: Intelligent Query Routing</h3>
+            <p>
+                To solve this, I implemented an Agentic Router. When a user asks a question, an LLM evaluates the prompt first.
+                If the question is semantic, it is routed to the <strong>FAISS</strong> pipeline. If the question requires mathematical operations, it is routed to a custom <strong>Pandas</strong> pipeline that executes dynamic code against the original dataset, guaranteeing 100% numerical accuracy.
+            </p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>5. Handling Edge Cases & Hallucinations</h2>
+        <div class="challenge-box">
+            <p>
+                To prevent hallucinations and handle irrelevant questions (e.g., "How to bake a cake?"), the LLM is controlled by a strict system prompt.
+                The prompt explicitly instructs the model: <em>"If the answer cannot be found in the context... say 'I do not have enough information in the retrieved context to answer this.'"</em>
+                This ensures the AI acts exclusively as a Pokemon Data Expert.
+            </p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>6. Data Source</h2>
+        <p>
+            The dataset used in this project is based on the original Pokemon games statistics.
+            Special thanks to the author <strong>Alberto Barradas</strong> for compiling this data.
+        </p>
+        <a href="https://www.kaggle.com/datasets/abcsds/pokemon/data" target="_blank" class="kaggle-btn">
+            View Dataset on Kaggle
+        </a>
+    </section>
+</div>
+{% endblock %}
